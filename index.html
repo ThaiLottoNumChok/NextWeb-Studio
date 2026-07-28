@@ -137,7 +137,6 @@
             font-size: 12px;
             margin-top: 10px;
         }
-        /* ปุ่มลับสำหรับเปิดหลังบ้านแอดมิน */
         .admin-toggle-btn {
             background: none;
             border: none;
@@ -163,7 +162,6 @@
         <p>สถานีรีวิวหนัง ซีรีส์ และป้ายยาไอเทมเด็ด</p>
     </header>
 
-    <!-- แผงควบคุมแอดมิน (ใส่รหัสผ่านก่อนถึงจะเปิด) -->
     <div class="admin-panel" id="adminPanel">
         <h3>🎛️ จัดผังรายการรีวิวหนัง (ระบบหลังบ้านแอดมิน)</h3>
         <input type="text" id="ytUrl" placeholder="วางลิงก์ยูทูป เช่น https://youtu.be/xxxx หรือรหัสคลิป">
@@ -172,7 +170,6 @@
         <button onclick="addPost()">➕ เพิ่มเข้ารายการสถานีทันที</button>
     </div>
 
-    <!-- พื้นที่แสดงผังรายการรีวิวหนังทั้งหมด -->
     <div class="container" id="postsContainer">
         <!-- รายการจะถูกโหลดมาแสดงที่นี่อัตโนมัติ -->
     </div>
@@ -180,16 +177,16 @@
     <footer>
         &copy; 2026 NextWeb-Studio. All Rights Reserved.
         <br>
-        <!-- ปุ่มลับคลิกเพื่อใส่รหัสผ่าน -->
         <button class="admin-toggle-btn" onclick="checkAdminPassword()">⚙️ เข้าสู่ระบบหลังบ้านแอดมิน</button>
     </footer>
 
     <script>
+        // ตั้งค่าคลิปเริ่มต้นถาวรตรงนี้ (ใส่คลิป Avengers หรือคลิปที่ต้องการไว้ได้เลยครับ)
         let posts = JSON.parse(localStorage.getItem('nextweb_posts')) || [
             {
-                url: "S_xWz7c8z80",
-                title: "จับตา...หนังโรงน่าดู 2026 (ฉบับจัดเต็ม!) | จดอ. JUSTดูIT.",
-                desc: "สรุปความรู้สึกหลังดูแบบเข้าใจง่าย สไตล์คอหนังตัวจริง ไม่สปอยล์เนื้อหาสำคัญ พร้อมชวนทุกคนมาวิเคราะห์และเตรียมตัวดูกัน..."
+                url: "https://youtu.be/S_xWz7c8z80", 
+                title: "แกะตัวอย่างหนัง",
+                desc: "แกะตัวอย่างหนัง"
             }
         ];
 
@@ -253,7 +250,6 @@
             }
         }
 
-        // ฟังก์ชันเช็ครหัสผ่านก่อนเปิดหลังบ้าน
         function checkAdminPassword() {
             let pass = prompt('กรุณากรอกรหัสผ่านแอดมิน:');
             if (pass === '44104545') {
