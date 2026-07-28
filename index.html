@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NextWeb-Studio - รีวิวหนังและซีรีส์สไตล์คอหนัง</title>
+    
+    <!-- Open Graph (OG Tags) สำหรับพรีวิวสวยๆ บน Facebook -->
+    <meta property="og:title" content="NextWeb-Studio - รีวิวหนังและซีรีส์สไตล์คอหนัง">
+    <meta property="og:description" content="สถานีรีวิวหนัง ซีรีส์ และป้ายยาไอเทมเด็ด คัดเน้นๆ เพื่อคอหนังตัวจริง กดดูรีวิวและช้อปสินค้ากันได้เลย!">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000&auto=format&fit=crop">
+    <meta property="og:url" content="https://thailottonumchok.github.io/NextWeb-Studio/">
+    <meta property="og:type" content="website">
+
     <style>
         :root {
             --bg-color: #121212;
@@ -45,13 +53,13 @@
             background-color: var(--card-bg);
             border-radius: 8px;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         .video-container {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* อัตราส่วน 16:9 */
+            padding-bottom: 56.25%; /* อัตราส่วน 16:9 สำหรับวิดีโอ YouTube */
             height: 0;
         }
         .video-container iframe {
@@ -68,6 +76,7 @@
         .post-content h2 {
             margin-top: 0;
             font-size: 20px;
+            color: #fff;
         }
         .post-content p {
             color: var(--text-muted);
@@ -104,20 +113,37 @@
     </header>
 
     <div class="container">
-        <!-- บทความรีวิวเรื่องที่ 1 -->
+
+        <!-- ========================================== -->
+        <!-- รีวิวเรื่องที่ 1 (อยากเปลี่ยนคลิปหรือหัวข้อ แก้ตรงนี้) -->
+        <!-- ========================================== -->
         <div class="post-card">
-            <!-- ตัวอย่างวิดีโอ Trailer จาก YouTube แบบถูกลิขสิทธิ์ (Embed) -->
             <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                <!-- เปลี่ยนรหัสหลัง /embed/ เป็นรหัสคลิป YouTube ที่ต้องการ -->
+                <iframe src="https://www.youtube.com/embed/S_xWz7c8z80" allowfullscreen></iframe>
             </div>
             <div class="post-content">
-                <h2>รีวิวจัดเต็ม: หนังใหม่กระแสแรงประจำสัปดาห์</h2>
-                <p>สรุปความรู้สึกหลังดูแบบเข้าใจง่าย สไตล์เราเอง ไม่สปอยล์เนื้อหาสำคัญ พร้อมชวนคอหนังมาวิเคราะห์ไปด้วยกัน...</p>
-                
-                <!-- ปุ่มลิงก์ข้ามไปเว็บสโตร์ส่วนตัว -->
+                <h2>จับตา...หนังโรงน่าดู 2026 (ฉบับจัดเต็ม!) | จดอ. JUSTดูIT.</h2>
+                <p>สรุปความรู้สึกหลังดูแบบเข้าใจง่าย สไตล์คอหนังตัวจริง ไม่สปอยล์เนื้อหาสำคัญ พร้อมชวนทุกคนมาวิเคราะห์และเตรียมตัวดูกัน...</p>
                 <a href="https://thailottonumchok.github.io/Shopee-Store-Pro/" class="btn-store" target="_blank">🛒 ช้อปอุปกรณ์ดูหนัง & สินค้าแนะนำของพวกเรา</a>
             </div>
         </div>
+
+        <!-- ========================================== -->
+        <!-- รีวิวเรื่องที่ 2 (เพิ่มเรื่องต่อไป ก๊อปปี้บล็อกนี้วางเพิ่มได้เลย) -->
+        <!-- ========================================== -->
+        <div class="post-card">
+            <div class="video-container">
+                <!-- เปลี่ยนรหัสหลัง /embed/ เป็นคลิปจากช่องอื่นหรือเรื่องอื่นตามใจชอบ -->
+                <iframe src="https://www.youtube.com/embed/ใส่รหัสคลิปเรื่องที่2ตรงนี้" allowfullscreen></iframe>
+            </div>
+            <div class="post-content">
+                <h2>ชื่อรีวิวหนังเรื่องที่ 2 ของเรา | ใส่ชื่อช่องรีวิวตรงนี้</h2>
+                <p>เขียนสรุปย่อหรือความประทับใจสไตล์เราเอง ชวนให้คนอ่านรู้สึกอินและอยากกด Play ดูคลิป...</p>
+                <a href="https://thailottonumchok.github.io/Shopee-Store-Pro/" class="btn-store" target="_blank">🛒 ช้อปอุปกรณ์ดูหนัง & สินค้าแนะนำของพวกเรา</a>
+            </div>
+        </div>
+
     </div>
 
     <footer>
