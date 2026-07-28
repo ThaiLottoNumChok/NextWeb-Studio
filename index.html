@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextWeb-Studio - รีวิวหนังและซีรีส์สไตล์คอหนัง</title>
+    <title>NextWeb-Studio - สถานีรีวิวหนังและซีรีส์</title>
     
     <!-- Open Graph (OG Tags) สำหรับพรีวิวสวยๆ บน Facebook -->
-    <meta property="og:title" content="NextWeb-Studio - รีวิวหนังและซีรีส์สไตล์คอหนัง">
+    <meta property="og:title" content="NextWeb-Studio - สถานีรีวิวหนังและซีรีส์สไตล์คอหนัง">
     <meta property="og:description" content="สถานีรีวิวหนัง ซีรีส์ และป้ายยาไอเทมเด็ด คัดเน้นๆ เพื่อคอหนังตัวจริง กดดูรีวิวและช้อปสินค้ากันได้เลย!">
     <meta property="og:image" content="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000&auto=format&fit=crop">
     <meta property="og:url" content="https://thailottonumchok.github.io/NextWeb-Studio/">
@@ -16,7 +16,7 @@
         :root {
             --bg-color: #121212;
             --card-bg: #1e1e1e;
-            --primary-color: #e50914; /* โทนสีแดงสไตล์สตรีมมิ่ง */
+            --primary-color: #e50914;
             --text-color: #ffffff;
             --text-muted: #b3b3b3;
         }
@@ -44,6 +44,40 @@
             color: var(--text-muted);
             font-size: 14px;
         }
+        /* ซ่อนแผงแอดมินไว้ก่อน */
+        .admin-panel {
+            display: none;
+            background-color: #1a1a1a;
+            border: 2px dashed var(--primary-color);
+            padding: 15px;
+            margin: 15px auto;
+            max-width: 800px;
+            border-radius: 8px;
+        }
+        .admin-panel h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+        .admin-panel input, .admin-panel textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .admin-panel button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
         .container {
             padding: 15px;
             max-width: 800px;
@@ -59,7 +93,7 @@
         .video-container {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* อัตราส่วน 16:9 สำหรับวิดีโอ YouTube */
+            padding-bottom: 56.25%;
             height: 0;
         }
         .video-container iframe {
@@ -93,8 +127,25 @@
             font-weight: bold;
             margin-top: 15px;
         }
-        .btn-store:hover {
-            background-color: #f40612;
+        .btn-delete {
+            background: #333;
+            color: #ff5555;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        /* ปุ่มลับสำหรับเปิดหลังบ้านแอดมิน */
+        .admin-toggle-btn {
+            background: none;
+            border: none;
+            color: #555;
+            cursor: pointer;
+            font-size: 11px;
+            text-decoration: underline;
+            margin-top: 10px;
         }
         footer {
             text-align: center;
@@ -112,43 +163,115 @@
         <p>สถานีรีวิวหนัง ซีรีส์ และป้ายยาไอเทมเด็ด</p>
     </header>
 
-    <div class="container">
+    <!-- แผงควบคุมแอดมิน (ใส่รหัสผ่านก่อนถึงจะเปิด) -->
+    <div class="admin-panel" id="adminPanel">
+        <h3>🎛️ จัดผังรายการรีวิวหนัง (ระบบหลังบ้านแอดมิน)</h3>
+        <input type="text" id="ytUrl" placeholder="วางลิงก์ยูทูป เช่น https://youtu.be/xxxx หรือรหัสคลิป">
+        <input type="text" id="postTitle" placeholder="ชื่อหัวข้อรีวิวหนัง / ชื่อช่อง">
+        <textarea id="postDesc" rows="2" placeholder="เนื้อหาย่อ หรือคำโปรยรีวิวสไตล์เรา..."></textarea>
+        <button onclick="addPost()">➕ เพิ่มเข้ารายการสถานีทันที</button>
+    </div>
 
-        <!-- ========================================== -->
-        <!-- รีวิวเรื่องที่ 1 (อยากเปลี่ยนคลิปหรือหัวข้อ แก้ตรงนี้) -->
-        <!-- ========================================== -->
-        <div class="post-card">
-            <div class="video-container">
-                <!-- เปลี่ยนรหัสหลัง /embed/ เป็นรหัสคลิป YouTube ที่ต้องการ -->
-                <iframe src="https://www.youtube.com/embed/S_xWz7c8z80" allowfullscreen></iframe>
-            </div>
-            <div class="post-content">
-                <h2>จับตา...หนังโรงน่าดู 2026 (ฉบับจัดเต็ม!) | จดอ. JUSTดูIT.</h2>
-                <p>สรุปความรู้สึกหลังดูแบบเข้าใจง่าย สไตล์คอหนังตัวจริง ไม่สปอยล์เนื้อหาสำคัญ พร้อมชวนทุกคนมาวิเคราะห์และเตรียมตัวดูกัน...</p>
-                <a href="https://thailottonumchok.github.io/Shopee-Store-Pro/" class="btn-store" target="_blank">🛒 ช้อปอุปกรณ์ดูหนัง & สินค้าแนะนำของพวกเรา</a>
-            </div>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- รีวิวเรื่องที่ 2 (เพิ่มเรื่องต่อไป ก๊อปปี้บล็อกนี้วางเพิ่มได้เลย) -->
-        <!-- ========================================== -->
-        <div class="post-card">
-            <div class="video-container">
-                <!-- เปลี่ยนรหัสหลัง /embed/ เป็นคลิปจากช่องอื่นหรือเรื่องอื่นตามใจชอบ -->
-                <iframe src="https://www.youtube.com/embed/ใส่รหัสคลิปเรื่องที่2ตรงนี้" allowfullscreen></iframe>
-            </div>
-            <div class="post-content">
-                <h2>ชื่อรีวิวหนังเรื่องที่ 2 ของเรา | ใส่ชื่อช่องรีวิวตรงนี้</h2>
-                <p>เขียนสรุปย่อหรือความประทับใจสไตล์เราเอง ชวนให้คนอ่านรู้สึกอินและอยากกด Play ดูคลิป...</p>
-                <a href="https://thailottonumchok.github.io/Shopee-Store-Pro/" class="btn-store" target="_blank">🛒 ช้อปอุปกรณ์ดูหนัง & สินค้าแนะนำของพวกเรา</a>
-            </div>
-        </div>
-
+    <!-- พื้นที่แสดงผังรายการรีวิวหนังทั้งหมด -->
+    <div class="container" id="postsContainer">
+        <!-- รายการจะถูกโหลดมาแสดงที่นี่อัตโนมัติ -->
     </div>
 
     <footer>
         &copy; 2026 NextWeb-Studio. All Rights Reserved.
+        <br>
+        <!-- ปุ่มลับคลิกเพื่อใส่รหัสผ่าน -->
+        <button class="admin-toggle-btn" onclick="checkAdminPassword()">⚙️ เข้าสู่ระบบหลังบ้านแอดมิน</button>
     </footer>
 
+    <script>
+        let posts = JSON.parse(localStorage.getItem('nextweb_posts')) || [
+            {
+                url: "S_xWz7c8z80",
+                title: "จับตา...หนังโรงน่าดู 2026 (ฉบับจัดเต็ม!) | จดอ. JUSTดูIT.",
+                desc: "สรุปความรู้สึกหลังดูแบบเข้าใจง่าย สไตล์คอหนังตัวจริง ไม่สปอยล์เนื้อหาสำคัญ พร้อมชวนทุกคนมาวิเคราะห์และเตรียมตัวดูกัน..."
+            }
+        ];
+
+        function renderPosts() {
+            const container = document.getElementById('postsContainer');
+            container.innerHTML = '';
+
+            posts.forEach((post, index) => {
+                let videoId = post.url;
+                if (videoId.includes('youtu.be/')) {
+                    videoId = videoId.split('youtu.be/')[1].split('?')[0];
+                } else if (videoId.includes('watch?v=')) {
+                    videoId = videoId.split('watch?v=')[1].split('&')[0];
+                } else if (videoId.includes('embed/')) {
+                    videoId = videoId.split('embed/')[1].split('?')[0];
+                }
+
+                const card = document.createElement('div');
+                card.className = 'post-card';
+                card.innerHTML = `
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+                    </div>
+                    <div class="post-content">
+                        <h2>${post.title}</h2>
+                        <p>${post.desc}</p>
+                        <a href="https://thailottonumchok.github.io/Shopee-Store-Pro/" class="btn-store" target="_blank">🛒 ช้อปอุปกรณ์ดูหนัง & สินค้าแนะนำของพวกเรา</a>
+                        <button class="btn-delete" onclick="deletePost(${index})">🗑️ ลบรายการนี้ออก</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addPost() {
+            const url = document.getElementById('ytUrl').value.trim();
+            const title = document.getElementById('postTitle').value.trim();
+            const desc = document.getElementById('postDesc').value.trim();
+
+            if (!url || !title) {
+                alert('กรุณากรอกลิงก์ยูทูปและชื่อหัวข้อรีวิวด้วยครับพี่!');
+                return;
+            }
+
+            posts.unshift({ url, title, desc });
+            localStorage.setItem('nextweb_posts', JSON.stringify(posts));
+
+            document.getElementById('ytUrl').value = '';
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postDesc').value = '';
+
+            renderPosts();
+            alert('เพิ่มเข้ารายการสถานีเรียบร้อยแล้วครับ!');
+        }
+
+        function deletePost(index) {
+            if (confirm('ต้องการลบรายการรีวิวนี้ออกจากสถานีใช่ไหมครับ?')) {
+                posts.splice(index, 1);
+                localStorage.setItem('nextweb_posts', JSON.stringify(posts));
+                renderPosts();
+            }
+        }
+
+        // ฟังก์ชันเช็ครหัสผ่านก่อนเปิดหลังบ้าน
+        function checkAdminPassword() {
+            let pass = prompt('กรุณากรอกรหัสผ่านแอดมิน:');
+            if (pass === '44104545') {
+                const panel = document.getElementById('adminPanel');
+                if (panel.style.display === 'block') {
+                    panel.style.display = 'none';
+                    alert('ปิดระบบหลังบ้านแล้วครับ');
+                } else {
+                    panel.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    alert('ยินดีต้อนรับท่านประธาน! เปิดระบบหลังบ้านสำเร็จ');
+                }
+            } else if (pass !== null) {
+                alert('รหัสผ่านไม่ถูกต้องครับ!');
+            }
+        }
+
+        renderPosts();
+    </script>
 </body>
 </html>
