@@ -77,6 +77,11 @@
             font-weight: bold;
             border-radius: 4px;
             cursor: pointer;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .btn-ai-voice {
+            background-color: #2196F3 !important;
         }
         .container {
             padding: 15px;
@@ -163,11 +168,14 @@
     </header>
 
     <div class="admin-panel" id="adminPanel">
-        <h3>🎛️ จัดผังรายการรีวิวหนัง (ระบบหลังบ้านแอดมิน)</h3>
-        <input type="text" id="ytUrl" placeholder="วางลิงก์ยูทูป เช่น https://youtu.be/xxxx หรือรหัสคลิป">
+        <h3>🎛️ จัดผังรายการ & ระบบเสียงพากย์ AI ฟรี</h3>
+        <input type="text" id="ytUrl" placeholder="วางลิงก์ยูทูป เช่น https://youtu.be/xxxx">
         <input type="text" id="postTitle" placeholder="ชื่อหัวข้อรีวิวหนัง / ชื่อช่อง">
-        <textarea id="postDesc" rows="2" placeholder="เนื้อหาย่อ หรือคำโปรยรีวิวสไตล์เรา..."></textarea>
+        <textarea id="postDesc" rows="3" placeholder="พิมพ์บทพากย์หนังตรงนี้ เพื่อกดฟังเสียง AI หรือเพิ่มเข้ารายการ..."></textarea>
+        
         <button onclick="addPost()">➕ เพิ่มเข้ารายการสถานีทันที</button>
+        <button class="btn-ai-voice" onclick="playAIVoice()">🎙️ ฟังเสียงพากย์ AI (ฟรี)</button>
+        <button onclick="stopAIVoice()" style="background-color: #555;">⏹️ หยุดเสียง</button>
     </div>
 
     <div class="container" id="postsContainer">
@@ -181,12 +189,11 @@
     </footer>
 
     <script>
-        // ตั้งค่าคลิปเริ่มต้นถาวรตรงนี้ (ใส่คลิป Avengers หรือคลิปที่ต้องการไว้ได้เลยครับ)
         let posts = JSON.parse(localStorage.getItem('nextweb_posts')) || [
             {
                 url: "https://youtu.be/S_xWz7c8z80", 
                 title: "แกะตัวอย่างหนัง",
-                desc: "แกะตัวอย่างหนัง"
+                desc: "4 ปีเต็มๆ ที่ทุกคนในโลก... แม้กระทั่งคนรักและเพื่อนสนิท ลืมชื่อและตัวตนของ 'ปีเตอร์ ปาร์คเกอร์' ไปจนหมดสิ้น!"
             }
         ];
 
@@ -247,6 +254,33 @@
                 posts.splice(index, 1);
                 localStorage.setItem('nextweb_posts', JSON.stringify(posts));
                 renderPosts();
+            }
+        }
+
+        // ฟังชันก์สังเคราะห์เสียง AI (Text-to-Speech ฟรีผ่านเบราว์เซอร์)
+        function playAIVoice() {
+            const text = document.getElementById('postDesc').value.trim();
+            if (!text) {
+                alert('กรุณาพิมพ์บทพากย์ในช่องเนื้อหาก่อนกดฟังเสียงครับพี่!');
+                return;
+            }
+
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // หยุดเสียงเก่าก่อน
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'th-TH'; // ตั้งค่าเสียงภาษาไทย
+                utterance.rate = 1.0; // ความเร็วในการพูด
+                utterance.pitch = 1.0; // โทนเสียง
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('เบราว์เซอร์ในมือถือของคุณไม่รองรับระบบเสียงพูด AI ครับ');
+            }
+        }
+
+        function stopAIVoice() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
             }
         }
 
