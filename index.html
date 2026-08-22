@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NextWeb-Studio - สถานีรีวิวหนังและซีรีส์</title>
-    
     <!-- Open Graph (OG Tags) สำหรับพรีวิวสวยๆ บน Facebook -->
     <meta property="og:title" content="NextWeb-Studio - สถานีรีวิวหนังและซีรีส์สไตล์คอหนัง">
     <meta property="og:description" content="สถานีรีวิวหนัง ซีรีส์ และป้ายยาไอเทมเด็ด คัดเน้นๆ เพื่อคอหนังตัวจริง กดดูรีวิวและช้อปสินค้ากันได้เลย!">
     <meta property="og:image" content="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000&auto=format&fit=crop">
     <meta property="og:url" content="https://thailottonumchok.github.io/NextWeb-Studio/">
     <meta property="og:type" content="website">
-
     <style>
         :root {
             --bg-color: #121212;
@@ -161,7 +159,6 @@
     </style>
 </head>
 <body>
-
     <header>
         <h1>NextWeb-Studio</h1>
         <p>สถานีรีวิวหนัง ซีรีส์ และป้ายยาไอเทมเด็ด</p>
@@ -172,7 +169,6 @@
         <input type="text" id="ytUrl" placeholder="วางลิงก์ยูทูป เช่น https://youtu.be/xxxx">
         <input type="text" id="postTitle" placeholder="ชื่อหัวข้อรีวิวหนัง / ชื่อช่อง">
         <textarea id="postDesc" rows="3" placeholder="พิมพ์บทพากย์หนังตรงนี้ เพื่อกดฟังเสียง AI หรือเพิ่มเข้ารายการ..."></textarea>
-        
         <button onclick="addPost()">➕ เพิ่มเข้ารายการสถานีทันที</button>
         <button class="btn-ai-voice" onclick="playAIVoice()">🎙️ ฟังเสียงพากย์ AI (ฟรี)</button>
         <button onclick="stopAIVoice()" style="background-color: #555;">⏹️ หยุดเสียง</button>
@@ -191,7 +187,7 @@
     <script>
         let posts = JSON.parse(localStorage.getItem('nextweb_posts')) || [
             {
-                url: "https://youtu.be/S_xWz7c8z80", 
+                url: "https://youtu.be/S_xWz7c8z80",
                 title: "แกะตัวอย่างหนัง",
                 desc: "4 ปีเต็มๆ ที่ทุกคนในโลก... แม้กระทั่งคนรักและเพื่อนสนิท ลืมชื่อและตัวตนของ 'ปีเตอร์ ปาร์คเกอร์' ไปจนหมดสิ้น!"
             }
@@ -200,7 +196,6 @@
         function renderPosts() {
             const container = document.getElementById('postsContainer');
             container.innerHTML = '';
-
             posts.forEach((post, index) => {
                 let videoId = post.url;
                 if (videoId.includes('youtu.be/')) {
@@ -210,7 +205,6 @@
                 } else if (videoId.includes('embed/')) {
                     videoId = videoId.split('embed/')[1].split('?')[0];
                 }
-
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 card.innerHTML = `
@@ -232,19 +226,15 @@
             const url = document.getElementById('ytUrl').value.trim();
             const title = document.getElementById('postTitle').value.trim();
             const desc = document.getElementById('postDesc').value.trim();
-
             if (!url || !title) {
                 alert('กรุณากรอกลิงก์ยูทูปและชื่อหัวข้อรีวิวด้วยครับพี่!');
                 return;
             }
-
             posts.unshift({ url, title, desc });
             localStorage.setItem('nextweb_posts', JSON.stringify(posts));
-
             document.getElementById('ytUrl').value = '';
             document.getElementById('postTitle').value = '';
             document.getElementById('postDesc').value = '';
-
             renderPosts();
             alert('เพิ่มเข้ารายการสถานีเรียบร้อยแล้วครับ!');
         }
@@ -257,24 +247,50 @@
             }
         }
 
-        // ฟังชันก์สังเคราะห์เสียง AI (Text-to-Speech ฟรีผ่านเบราว์เซอร์)
+        // ฟังก์ชันสังเคราะห์เสียง AI (Text-to-Speech ฟรีผ่านเบราว์เซอร์)
+        // ปรับโทนให้ดูดราม่า/ตื่นตระหนกแบบตัวอย่างหนัง โดยไม่ต้องพึ่ง API key ภายนอก
+        // (เว็บนี้เป็น static site บน GitHub Pages — ฝัง API key ไว้ในโค้ดจะถูกมองเห็นได้จากทุกคน
+        //  จึงไม่ปลอดภัยที่จะต่อ Gemini TTS ตรงจากฝั่ง client แบบนี้)
         function playAIVoice() {
             const text = document.getElementById('postDesc').value.trim();
+            const btn = document.querySelector('.btn-ai-voice');
             if (!text) {
                 alert('กรุณาพิมพ์บทพากย์ในช่องเนื้อหาก่อนกดฟังเสียงครับพี่!');
                 return;
             }
-
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // หยุดเสียงเก่าก่อน
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'th-TH'; // ตั้งค่าเสียงภาษาไทย
-                utterance.rate = 1.0; // ความเร็วในการพูด
-                utterance.pitch = 1.0; // โทนเสียง
-                
-                window.speechSynthesis.speak(utterance);
-            } else {
+            if (!('speechSynthesis' in window)) {
                 alert('เบราว์เซอร์ในมือถือของคุณไม่รองรับระบบเสียงพูด AI ครับ');
+                return;
+            }
+
+            window.speechSynthesis.cancel(); // หยุดเสียงเก่าก่อน
+
+            const speak = () => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'th-TH';
+
+                // เลือกเสียงภาษาไทยที่มีอยู่ในเบราว์เซอร์ (ถ้ามีหลายเสียงให้เลือกตัวแรกที่เจอ)
+                const voices = window.speechSynthesis.getVoices();
+                const thVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('th'));
+                if (thVoice) utterance.voice = thVoice;
+
+                // โทนดราม่า/ตื่นตระหนกแบบตัวอย่างหนัง: จังหวะช้าลงเล็กน้อย เสียงทุ้มลง เน้นหนักขึ้น
+                utterance.rate = 0.92;
+                utterance.pitch = 0.75;
+                utterance.volume = 1.0;
+
+                btn.innerText = "🔊 กำลังพากย์เสียง...";
+                utterance.onend = () => { btn.innerText = "🎙️ ฟังเสียงพากย์ AI (ฟรี)"; };
+                utterance.onerror = () => { btn.innerText = "🎙️ ฟังเสียงพากย์ AI (ฟรี)"; };
+
+                window.speechSynthesis.speak(utterance);
+            };
+
+            // บางเบราว์เซอร์โหลดรายชื่อเสียงแบบ async ครั้งแรกที่เรียกใช้
+            if (window.speechSynthesis.getVoices().length === 0) {
+                window.speechSynthesis.onvoiceschanged = speak;
+            } else {
+                speak();
             }
         }
 
