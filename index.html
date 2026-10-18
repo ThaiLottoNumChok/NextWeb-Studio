@@ -255,7 +255,7 @@
             <option value="youtube">▶️ YouTube Video (16:9)</option>
             <option value="tiktok">🎵 TikTok Reel / Video (9:16)</option>
         </select>
-        <input type="text" id="ytUrl" placeholder="วางลิงก์วิดีโอ (YouTube หรือ TikTok เช่น vt.tiktok.com/xxxx)">
+        <input type="text" id="ytUrl" placeholder="วางลิงก์วิดีโอ หรือวางเลข ID TikTok ตรงนี้ได้เลย">
         <button type="button" class="btn-convert-tt" onclick="expandTikTokUrl()">🔗 เครื่องมือช่วยแปลงลิงก์สั้น TikTok (vt.tiktok.com)</button>
         <input type="text" id="postTitle" placeholder="ชื่อหัวข้อรีวิวหนัง / ชื่อคลิป">
         <textarea id="postDesc" rows="3" placeholder="พิมพ์บทพากย์หนังตรงนี้ เพื่อกดฟังเสียง AI หรือเพิ่มเข้ารายการ..."></textarea>
@@ -307,13 +307,18 @@
                 let mediaHtml = '';
                 
                 if (pType === 'tiktok') {
-                    let rawUrl = post.url;
+                    let rawUrl = post.url.trim();
                     let tiktokId = '';
                     
-                    // ดึงเฉพาะตัวเลข Video ID จากลิงก์
-                    const match = rawUrl.match(/\/video\/(\d+)/) || rawUrl.match(/(\d{15,20})/);
-                    if (match && match[1]) {
-                        tiktokId = match[1];
+                    // ถ้ารหัสเป็นตัวเลขยาวๆ ล้วนๆ (Video ID ที่ก๊อปมา) ให้ใช้ค่านั้นทันที
+                    if (/^\d{15,20}$/.test(rawUrl)) {
+                        tiktokId = rawUrl;
+                    } else {
+                        // สกัดจากลิงก์ปกติ
+                        const match = rawUrl.match(/\/video\/(\d+)/) || rawUrl.match(/(\d{15,20})/);
+                        if (match && match[1]) {
+                            tiktokId = match[1];
+                        }
                     }
 
                     if (tiktokId) {
@@ -372,9 +377,9 @@
             }
             if (val.includes('vt.tiktok.com') || val.includes('vm.tiktok.com')) {
                 window.open('https://watchtiktokwithoutapp.com/', '_blank');
-                alert('เปิดหน้าแปลงลิงก์ให้แล้วครับ! ให้ท่านบอสวางลิงก์สั้นในนั้น แล้วนำ URL ยาวกลับมาวางแทนที่ได้เลยครับ');
+                alert('เปิดหน้าแปลงลิงก์ให้แล้วครับ! นำรหัสตัวเลข Video ID กลับมาวางในช่องได้เลยครับ');
             } else {
-                alert('ลิงก์นี้เป็นลิงก์สมบูรณ์แล้ว สามารถกดเพิ่มเข้ารายการได้เลยครับ!');
+                alert('ลิงก์นี้สมบูรณ์แล้ว สามารถกดเพิ่มเข้ารายการได้เลยครับ!');
             }
         }
 
@@ -391,7 +396,7 @@
             const title = document.getElementById('postTitle').value.trim();
             const desc = document.getElementById('postDesc').value.trim();
             if (!url || !title) {
-                alert('กรุณากรอกลิงก์วิดีโอและชื่อหัวข้อด้วยครับพี่!');
+                alert('กรุณากรอกลิงก์วิดีโอหรือรหัส ID และชื่อหัวข้อด้วยครับพี่!');
                 return;
             }
             posts.unshift({ type, url, title, desc });
@@ -399,6 +404,7 @@
             document.getElementById('ytUrl').value = '';
             document.getElementById('postTitle').value = '';
             document.getElementById('postDesc').value = '';
+            renderRenderPosts();
             renderPosts();
             alert('เพิ่มเข้ารายการสถานีเรียบร้อยแล้วครับ!');
         }
