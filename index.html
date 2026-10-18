@@ -249,7 +249,7 @@
             <option value="youtube">▶️ YouTube Video (16:9)</option>
             <option value="tiktok">🎵 TikTok Reel / Video (9:16)</option>
         </select>
-        <input type="text" id="ytUrl" placeholder="วางลิงก์วิดีโอ (YouTube หรือ TikTok เช่น https://www.tiktok.com/@user/video/xxxx)">
+        <input type="text" id="ytUrl" placeholder="วางลิงก์วิดีโอ (YouTube หรือ ลิงก์เต็ม TikTok เช่น tiktok.com/@user/video/xxxxxx)">
         <input type="text" id="postTitle" placeholder="ชื่อหัวข้อรีวิวหนัง / ชื่อคลิป">
         <textarea id="postDesc" rows="3" placeholder="พิมพ์บทพากย์หนังตรงนี้ เพื่อกดฟังเสียง AI หรือเพิ่มเข้ารายการ..."></textarea>
         <button onclick="addPost()">➕ เพิ่มเข้ารายการสถานีทันที</button>
@@ -301,14 +301,26 @@
                 
                 if (pType === 'tiktok') {
                     let tiktokId = post.url;
+                    // ดึงเฉพาะตัวเลข Video ID จากลิงก์เต็มของ TikTok
                     if (tiktokId.includes('/video/')) {
-                        tiktokId = tiktokId.split('/video/')[1].split('?')[0];
+                        tiktokId = tiktokId.split('/video/')[1].split('?')[0].replace(/[^0-9]/g, '');
                     }
-                    mediaHtml = `
-                        <div class="tiktok-container">
-                            <iframe src="https://www.tiktok.com/player/v1/${tiktokId}?music_info=1&description=1" allowfullscreen allow="encrypted-media;"></iframe>
-                        </div>
-                    `;
+                    
+                    if (!tiktokId || tiktokId.length < 10) {
+                        // กรณีใส่ลิงก์สั้น vt.tiktok.com หรือดึง ID ไม่ได้ ให้ทำปุ่มลิงก์ตรงไปที่ TikTok แทนเพื่อให้กดดูได้ชัวร์ๆ
+                        mediaHtml = `
+                            <div style="padding: 40px 20px; text-align: center; background: #000;">
+                                <p style="color: #fff; margin-bottom: 15px;">🎵 เปิดรับชมคลิปนี้โดยตรงบน TikTok</p>
+                                <a href="${post.url}" target="_blank" style="background: var(--tiktok-color); color: #fff; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold;">🔗 เปิดดูในแอป TikTok</a>
+                            </div>
+                        `;
+                    } else {
+                        mediaHtml = `
+                            <div class="tiktok-container">
+                                <iframe src="https://www.tiktok.com/player/v1/${tiktokId}?music_info=1&description=1" allowfullscreen allow="encrypted-media;"></iframe>
+                            </div>
+                        `;
+                    }
                 } else {
                     let videoId = post.url;
                     if (videoId.includes('youtu.be/')) {
