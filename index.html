@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextWeb-Studio - สถานีรีวิวหนังและซีรีส์</title>
-    <!-- Open Graph (OG Tags) สำหรับพรีวิวสวยๆ บน Facebook -->
-    <meta property="og:title" content="NextWeb-Studio - สถานีรีวิวหนังและซีรีส์สไตล์คอหนัง">
-    <meta property="og:description" content="สถานีรีวิวหนัง ซีรีส์ และป้ายยาไอเทมเด็ด คัดเน้นๆ เพื่อคอหนังตัวจริง กดดูรีวิวและช้อปสินค้ากันได้เลย!">
+    <title>NextWeb-Studio - สถานีรีวิวหนัง ซีรีส์ & TikTok Reels</title>
+    <!-- Open Graph (OG Tags) สำหรับพรีวิวสวยๆ บน Facebook & Social -->
+    <meta property="og:title" content="NextWeb-Studio - สถานีรีวิวหนัง ซีรีส์ & TikTok Reels สไตล์คอหนัง">
+    <meta property="og:description" content="สถานีรีวิวหนัง ซีรีส์ และป้ายยาไอเทมเด็ด พร้อม TikTok Reels คัดเน้นๆ เพื่อคอหนังตัวจริง!">
     <meta property="og:image" content="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000&auto=format&fit=crop">
     <meta property="og:url" content="https://thailottonumchok.github.io/NextWeb-Studio/">
     <meta property="og:type" content="website">
@@ -15,6 +15,8 @@
             --bg-color: #121212;
             --card-bg: #1e1e1e;
             --primary-color: #e50914;
+            --tiktok-color: #ff0050;
+            --tiktok-cyan: #00f2fe;
             --text-color: #ffffff;
             --text-muted: #b3b3b3;
         }
@@ -42,6 +44,36 @@
             color: var(--text-muted);
             font-size: 14px;
         }
+        /* เมนูกรองประเภทวิดีโอ */
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px auto 0;
+            max-width: 800px;
+            padding: 0 15px;
+        }
+        .filter-btn {
+            background: #2a2a2a;
+            color: var(--text-color);
+            border: 1px solid #444;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+        }
+        .filter-btn.tiktok.active {
+            background: linear-gradient(45deg, var(--tiktok-color), var(--tiktok-cyan));
+            border-color: transparent;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+        }
         /* ซ่อนแผงแอดมินไว้ก่อน */
         .admin-panel {
             display: none;
@@ -57,7 +89,7 @@
             color: var(--primary-color);
             font-size: 16px;
         }
-        .admin-panel input, .admin-panel textarea {
+        .admin-panel select, .admin-panel input, .admin-panel textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -92,14 +124,37 @@
             overflow: hidden;
             margin-bottom: 25px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            position: relative;
         }
+        /* Container วิดีโอ YouTube (16:9) */
         .video-container {
             position: relative;
             width: 100%;
             padding-bottom: 56.25%;
             height: 0;
+            background: #000;
         }
         .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        /* Container วิดีโอ TikTok Reels (9:16 แนวตั้ง) */
+        .tiktok-container {
+            position: relative;
+            width: 100%;
+            max-width: 385px;
+            margin: 0 auto;
+            padding-bottom: 177.77%; /* 9:16 aspect ratio */
+            height: 0;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .tiktok-container iframe {
             position: absolute;
             top: 0;
             left: 0;
@@ -113,6 +168,24 @@
         .post-content h2 {
             margin-top: 0;
             font-size: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: normal;
+        }
+        .badge-yt {
+            background: var(--primary-color);
+            color: #fff;
+        }
+        .badge-tiktok {
+            background: linear-gradient(45deg, var(--tiktok-color), #000);
+            border: 1px solid var(--tiktok-cyan);
             color: #fff;
         }
         .post-content p {
@@ -161,13 +234,23 @@
 <body>
     <header>
         <h1>NextWeb-Studio</h1>
-        <p>สถานีรีวิวหนัง ซีรีส์ และป้ายยาไอเทมเด็ด</p>
+        <p>สถานีรีวิวหนัง ซีรีส์ และ TikTok Reels เด็ดๆ</p>
     </header>
+
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterPosts('all', this)">🎬 ทั้งหมด</button>
+        <button class="filter-btn" onclick="filterPosts('youtube', this)">▶️ YouTube</button>
+        <button class="filter-btn tiktok" onclick="filterPosts('tiktok', this)">🎵 TikTok Reels</button>
+    </div>
 
     <div class="admin-panel" id="adminPanel">
         <h3>🎛️ จัดผังรายการ & ระบบเสียงพากย์ AI ฟรี</h3>
-        <input type="text" id="ytUrl" placeholder="วางลิงก์ยูทูป เช่น https://youtu.be/xxxx">
-        <input type="text" id="postTitle" placeholder="ชื่อหัวข้อรีวิวหนัง / ชื่อช่อง">
+        <select id="mediaType">
+            <option value="youtube">▶️ YouTube Video (16:9)</option>
+            <option value="tiktok">🎵 TikTok Reel / Video (9:16)</option>
+        </select>
+        <input type="text" id="ytUrl" placeholder="วางลิงก์วิดีโอ (YouTube หรือ TikTok เช่น https://www.tiktok.com/@user/video/xxxx)">
+        <input type="text" id="postTitle" placeholder="ชื่อหัวข้อรีวิวหนัง / ชื่อคลิป">
         <textarea id="postDesc" rows="3" placeholder="พิมพ์บทพากย์หนังตรงนี้ เพื่อกดฟังเสียง AI หรือเพิ่มเข้ารายการ..."></textarea>
         <button onclick="addPost()">➕ เพิ่มเข้ารายการสถานีทันที</button>
         <button class="btn-ai-voice" onclick="playAIVoice()">🎙️ ฟังเสียงพากย์ AI (ฟรี)</button>
@@ -185,8 +268,10 @@
     </footer>
 
     <script>
+        let currentFilter = 'all';
         let posts = JSON.parse(localStorage.getItem('nextweb_posts')) || [
             {
+                type: "youtube",
                 url: "https://youtu.be/S_xWz7c8z80",
                 title: "แกะตัวอย่างหนัง",
                 desc: "4 ปีเต็มๆ ที่ทุกคนในโลก... แม้กระทั่งคนรักและเพื่อนสนิท ลืมชื่อและตัวตนของ 'ปีเตอร์ ปาร์คเกอร์' ไปจนหมดสิ้น!"
@@ -196,23 +281,58 @@
         function renderPosts() {
             const container = document.getElementById('postsContainer');
             container.innerHTML = '';
-            posts.forEach((post, index) => {
-                let videoId = post.url;
-                if (videoId.includes('youtu.be/')) {
-                    videoId = videoId.split('youtu.be/')[1].split('?')[0];
-                } else if (videoId.includes('watch?v=')) {
-                    videoId = videoId.split('watch?v=')[1].split('&')[0];
-                } else if (videoId.includes('embed/')) {
-                    videoId = videoId.split('embed/')[1].split('?')[0];
-                }
+            
+            const filteredPosts = posts.filter(post => {
+                if (currentFilter === 'all') return true;
+                return (post.type || 'youtube') === currentFilter;
+            });
+
+            if (filteredPosts.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#777; margin: 40px 0;">ยังไม่มีรายการในหมวดหมู่นี้ครับ</p>';
+                return;
+            }
+
+            filteredPosts.forEach((post, index) => {
+                const pType = post.type || 'youtube';
                 const card = document.createElement('div');
                 card.className = 'post-card';
+                
+                let mediaHtml = '';
+                
+                if (pType === 'tiktok') {
+                    let tiktokId = post.url;
+                    if (tiktokId.includes('/video/')) {
+                        tiktokId = tiktokId.split('/video/')[1].split('?')[0];
+                    }
+                    mediaHtml = `
+                        <div class="tiktok-container">
+                            <iframe src="https://www.tiktok.com/player/v1/${tiktokId}?music_info=1&description=1" allowfullscreen allow="encrypted-media;"></iframe>
+                        </div>
+                    `;
+                } else {
+                    let videoId = post.url;
+                    if (videoId.includes('youtu.be/')) {
+                        videoId = videoId.split('youtu.be/')[1].split('?')[0];
+                    } else if (videoId.includes('watch?v=')) {
+                        videoId = videoId.split('watch?v=')[1].split('&')[0];
+                    } else if (videoId.includes('embed/')) {
+                        videoId = videoId.split('embed/')[1].split('?')[0];
+                    }
+                    mediaHtml = `
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+                        </div>
+                    `;
+                }
+
+                const badgeHtml = pType === 'tiktok' 
+                    ? '<span class="badge badge-tiktok">TikTok Reel</span>' 
+                    : '<span class="badge badge-yt">YouTube</span>';
+
                 card.innerHTML = `
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
-                    </div>
+                    ${mediaHtml}
                     <div class="post-content">
-                        <h2>${post.title}</h2>
+                        <h2>${post.title} ${badgeHtml}</h2>
                         <p>${post.desc}</p>
                         <a href="https://thailottonumchok.github.io/Shopee-Store-Pro/" class="btn-store" target="_blank">🛒 ช้อปอุปกรณ์ดูหนัง & สินค้าแนะนำของพวกเรา</a>
                         <button class="btn-delete" onclick="deletePost(${index})">🗑️ ลบรายการนี้ออก</button>
@@ -222,15 +342,23 @@
             });
         }
 
+        function filterPosts(filter, btn) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPosts();
+        }
+
         function addPost() {
+            const type = document.getElementById('mediaType').value;
             const url = document.getElementById('ytUrl').value.trim();
             const title = document.getElementById('postTitle').value.trim();
             const desc = document.getElementById('postDesc').value.trim();
             if (!url || !title) {
-                alert('กรุณากรอกลิงก์ยูทูปและชื่อหัวข้อรีวิวด้วยครับพี่!');
+                alert('กรุณากรอกลิงก์วิดีโอและชื่อหัวข้อด้วยครับพี่!');
                 return;
             }
-            posts.unshift({ url, title, desc });
+            posts.unshift({ type, url, title, desc });
             localStorage.setItem('nextweb_posts', JSON.stringify(posts));
             document.getElementById('ytUrl').value = '';
             document.getElementById('postTitle').value = '';
@@ -247,10 +375,6 @@
             }
         }
 
-        // ฟังก์ชันสังเคราะห์เสียง AI (Text-to-Speech ฟรีผ่านเบราว์เซอร์)
-        // ปรับโทนให้ดูดราม่า/ตื่นตระหนกแบบตัวอย่างหนัง โดยไม่ต้องพึ่ง API key ภายนอก
-        // (เว็บนี้เป็น static site บน GitHub Pages — ฝัง API key ไว้ในโค้ดจะถูกมองเห็นได้จากทุกคน
-        //  จึงไม่ปลอดภัยที่จะต่อ Gemini TTS ตรงจากฝั่ง client แบบนี้)
         function playAIVoice() {
             const text = document.getElementById('postDesc').value.trim();
             const btn = document.querySelector('.btn-ai-voice');
@@ -263,18 +387,16 @@
                 return;
             }
 
-            window.speechSynthesis.cancel(); // หยุดเสียงเก่าก่อน
+            window.speechSynthesis.cancel();
 
             const speak = () => {
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'th-TH';
 
-                // เลือกเสียงภาษาไทยที่มีอยู่ในเบราว์เซอร์ (ถ้ามีหลายเสียงให้เลือกตัวแรกที่เจอ)
                 const voices = window.speechSynthesis.getVoices();
                 const thVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('th'));
                 if (thVoice) utterance.voice = thVoice;
 
-                // โทนดราม่า/ตื่นตระหนกแบบตัวอย่างหนัง: จังหวะช้าลงเล็กน้อย เสียงทุ้มลง เน้นหนักขึ้น
                 utterance.rate = 0.92;
                 utterance.pitch = 0.75;
                 utterance.volume = 1.0;
@@ -286,7 +408,6 @@
                 window.speechSynthesis.speak(utterance);
             };
 
-            // บางเบราว์เซอร์โหลดรายชื่อเสียงแบบ async ครั้งแรกที่เรียกใช้
             if (window.speechSynthesis.getVoices().length === 0) {
                 window.speechSynthesis.onvoiceschanged = speak;
             } else {
