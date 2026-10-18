@@ -10,6 +10,10 @@
     <meta property="og:image" content="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000&auto=format&fit=crop">
     <meta property="og:url" content="https://thailottonumchok.github.io/NextWeb-Studio/">
     <meta property="og:type" content="website">
+    
+    <!-- สคริปต์ทางการของ TikTok สำหรับดึง Embed วิดีโออัตโนมัติ -->
+    <script async src="https://www.tiktok.com/embed.js"></script>
+
     <style>
         :root {
             --bg-color: #121212;
@@ -142,25 +146,13 @@
             height: 100%;
             border: 0;
         }
-        /* Container วิดีโอ TikTok Reels (9:16 แนวตั้ง) */
-        .tiktok-container {
-            position: relative;
-            width: 100%;
-            max-width: 385px;
-            margin: 0 auto;
-            padding-bottom: 177.77%; /* 9:16 aspect ratio */
-            height: 0;
+        /* Container สำหรับ TikTok Embed Official */
+        .tiktok-embed-wrapper {
+            display: flex;
+            justify-content: center;
             background: #000;
-            border-radius: 12px;
+            padding: 10px 0;
             overflow: hidden;
-        }
-        .tiktok-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
         }
         .post-content {
             padding: 15px;
@@ -247,9 +239,9 @@
         <h3>🎛️ จัดผังรายการ & ระบบเสียงพากย์ AI ฟรี</h3>
         <select id="mediaType">
             <option value="youtube">▶️ YouTube Video (16:9)</option>
-            <option value="tiktok">🎵 TikTok Reel / Video (9:16)</option>
+            <option value="tiktok">🎵 TikTok Reel / Video (วางลิงก์จากแอปได้เลย)</option>
         </select>
-        <input type="text" id="ytUrl" placeholder="วางลิงก์วิดีโอ (YouTube หรือ ลิงก์เต็ม TikTok เช่น tiktok.com/@user/video/xxxxxx)">
+        <input type="text" id="ytUrl" placeholder="วางลิงก์วิดีโอ (YouTube หรือ ลิงก์จากแอป TikTok เช่น vt.tiktok.com/xxxx)">
         <input type="text" id="postTitle" placeholder="ชื่อหัวข้อรีวิวหนัง / ชื่อคลิป">
         <textarea id="postDesc" rows="3" placeholder="พิมพ์บทพากย์หนังตรงนี้ เพื่อกดฟังเสียง AI หรือเพิ่มเข้ารายการ..."></textarea>
         <button onclick="addPost()">➕ เพิ่มเข้ารายการสถานีทันที</button>
@@ -300,27 +292,16 @@
                 let mediaHtml = '';
                 
                 if (pType === 'tiktok') {
-                    let tiktokId = post.url;
-                    // ดึงเฉพาะตัวเลข Video ID จากลิงก์เต็มของ TikTok
-                    if (tiktokId.includes('/video/')) {
-                        tiktokId = tiktokId.split('/video/')[1].split('?')[0].replace(/[^0-9]/g, '');
-                    }
-                    
-                    if (!tiktokId || tiktokId.length < 10) {
-                        // กรณีใส่ลิงก์สั้น vt.tiktok.com หรือดึง ID ไม่ได้ ให้ทำปุ่มลิงก์ตรงไปที่ TikTok แทนเพื่อให้กดดูได้ชัวร์ๆ
-                        mediaHtml = `
-                            <div style="padding: 40px 20px; text-align: center; background: #000;">
-                                <p style="color: #fff; margin-bottom: 15px;">🎵 เปิดรับชมคลิปนี้โดยตรงบน TikTok</p>
-                                <a href="${post.url}" target="_blank" style="background: var(--tiktok-color); color: #fff; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold;">🔗 เปิดดูในแอป TikTok</a>
-                            </div>
-                        `;
-                    } else {
-                        mediaHtml = `
-                            <div class="tiktok-container">
-                                <iframe src="https://www.tiktok.com/player/v1/${tiktokId}?music_info=1&description=1" allowfullscreen allow="encrypted-media;"></iframe>
-                            </div>
-                        `;
-                    }
+                    // รองรับทั้งลิงก์สั้น vt.tiktok.com และลิงก์ยาวแบบเต็ม
+                    mediaHtml = `
+                        <div class="tiktok-embed-wrapper">
+                            <blockquote class="tiktok-embed" cite="${post.url}" data-video-id="" style="max-width: 605px;min-width: 325px;">
+                                <section>
+                                    <a target="_blank" title="TikTok" href="${post.url}">กำลังโหลดคลิป TikTok...</a>
+                                </section>
+                            </blockquote>
+                        </div>
+                    `;
                 } else {
                     let videoId = post.url;
                     if (videoId.includes('youtu.be/')) {
@@ -352,6 +333,15 @@
                 `;
                 container.appendChild(card);
             });
+
+            // โหลดสคริปต์ TikTok Embed เพื่อแปลงบล็อกข้อความให้กลายเป็นวิดีโอทันที
+            if (window.tiktokEmbed) {
+                window.tiktokEmbed.load();
+            } else {
+                const script = document.createElement('script');
+                script.src = "https://www.tiktok.com/embed.js";
+                document.body.appendChild(script);
+            }
         }
 
         function filterPosts(filter, btn) {
