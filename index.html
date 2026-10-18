@@ -120,8 +120,8 @@
             margin-bottom: 10px;
         }
         .container {
-            padding: 15px;
-            max-width: 800px;
+            padding: 10px;
+            max-width: 500px; /* ขนาดบีบเข้าสำหรับหน้าจอมือถือ */
             margin: auto;
         }
         .post-card {
@@ -148,16 +148,15 @@
             height: 100%;
             border: 0;
         }
-        /* Container วิดีโอ TikTok Reels (9:16 แนวตั้ง) */
+        /* Container วิดีโอ TikTok Reels (9:16 แนวตั้ง ขยายเต็มความกว้าง) */
         .tiktok-container {
             position: relative;
             width: 100%;
-            max-width: 385px;
+            max-width: 100%;
             margin: 0 auto;
             padding-bottom: 177.77%;
             height: 0;
             background: #000;
-            border-radius: 12px;
             overflow: hidden;
         }
         .tiktok-container iframe {
@@ -310,11 +309,9 @@
                     let rawUrl = post.url.trim();
                     let tiktokId = '';
                     
-                    // ถ้ารหัสเป็นตัวเลขยาวๆ ล้วนๆ (Video ID ที่ก๊อปมา) ให้ใช้ค่านั้นทันที
                     if (/^\d{15,20}$/.test(rawUrl)) {
                         tiktokId = rawUrl;
                     } else {
-                        // สกัดจากลิงก์ปกติ
                         const match = rawUrl.match(/\/video\/(\d+)/) || rawUrl.match(/(\d{15,20})/);
                         if (match && match[1]) {
                             tiktokId = match[1];
@@ -404,7 +401,6 @@
             document.getElementById('ytUrl').value = '';
             document.getElementById('postTitle').value = '';
             document.getElementById('postDesc').value = '';
-            renderRenderPosts();
             renderPosts();
             alert('เพิ่มเข้ารายการสถานีเรียบร้อยแล้วครับ!');
         }
